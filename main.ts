@@ -1,3 +1,6 @@
+// Platinum Road — the GTA VI trophy guide and tracker built for this entry: all 55 PS5 trophies, each with a
+// guide written for this page and the sources it rests on, a six-stage roadmap to the platinum, and a checklist
+// whose progress lives in the browser. This program hands the guide in (see below).
 // A working gta6-trophy-guide-01 entry (Node 22, standard library only): the guide is this directory's app/ folder,
 // plain static files a browser opens at app/index.html (ES modules, CSS, no build step), offline: it loads nothing
 // over the network, and its trophy list and guides are app/data/trophies.json. The program hands it in: it copies app/

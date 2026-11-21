@@ -1,7 +1,198 @@
-body { font-family: Arial, sans-serif; margin: 24px; color: #222; }
-header { display: flex; justify-content: space-between; align-items: baseline; }
-.controls { display: flex; gap: 16px; margin: 12px 0; align-items: center; }
-.import input { font-size: 12px; }
-table { border-collapse: collapse; width: 100%; }
-th, td { border-bottom: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; white-space: pre-line; }
-th { background: #f2f2f2; }
+/* Platinum Road — an original neon-highway look: asphalt dark, sunset
+   gradient accents, trophy-grade metals. No images, no webfonts. */
+
+:root {
+  --asphalt: #10131c;
+  --panel: #181d2b;
+  --panel-2: #1f2637;
+  --ink: #eef1f8;
+  --muted: #9aa5bd;
+  --line: #2b3348;
+  --sunset-1: #ff5e8a;
+  --sunset-2: #ff9a3d;
+  --sunset-3: #37e0c8;
+  --platinum: #8ef2e6;
+  --gold: #f5c542;
+  --silver: #ccd6e4;
+  --bronze: #dd9257;
+  --danger: #ffb020;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--asphalt);
+  color: var(--ink);
+  font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  line-height: 1.45;
+}
+
+#site-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  background: linear-gradient(100deg, #1a1030 0%, #33102e 45%, #3a1c10 100%);
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(90deg, var(--sunset-1), var(--sunset-2), var(--sunset-3)) 1;
+}
+
+.brand { display: flex; gap: 16px; align-items: center; }
+
+.brand-mark {
+  width: 56px; height: 56px;
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 20px; letter-spacing: 1px;
+  color: #14101f;
+  background: linear-gradient(135deg, var(--sunset-1), var(--sunset-2));
+  border-radius: 12px;
+}
+
+h1 { margin: 0; font-size: 30px; letter-spacing: .5px; }
+.tagline { margin: 2px 0 0; color: var(--muted); max-width: 520px; }
+
+#progress-panel { min-width: 280px; }
+.progress-numbers { font-size: 20px; font-weight: 700; }
+.progress-bar {
+  height: 10px; margin: 8px 0; border-radius: 6px;
+  background: #0a0d14; border: 1px solid var(--line); overflow: hidden;
+}
+#progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--sunset-1), var(--sunset-2), var(--sunset-3));
+  transition: width .3s ease;
+}
+.grade-counts { display: flex; gap: 14px; list-style: none; margin: 0; padding: 0; font-size: 13px; text-transform: capitalize; }
+.grade-text-platinum { color: var(--platinum); }
+.grade-text-gold { color: var(--gold); }
+.grade-text-silver { color: var(--silver); }
+.grade-text-bronze { color: var(--bronze); }
+
+#view-tabs { display: flex; gap: 8px; padding: 14px 28px 0; }
+.tab {
+  background: var(--panel); color: var(--muted);
+  border: 1px solid var(--line); border-radius: 10px 10px 0 0;
+  padding: 10px 18px; font-size: 15px; font-weight: 600; cursor: pointer;
+}
+.tab.active { color: var(--ink); background: var(--panel-2); border-bottom-color: var(--panel-2); }
+
+main { padding: 0 28px 28px; }
+
+#toolbar {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+  background: var(--panel-2); border: 1px solid var(--line);
+  padding: 14px 16px; border-radius: 0 12px 12px 12px;
+}
+#search-box {
+  flex: 1 1 220px; padding: 9px 12px; font-size: 15px;
+  background: var(--panel); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 8px;
+}
+#kind-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.kind-chip {
+  background: var(--panel); color: var(--muted);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 6px 12px; font-size: 13px; cursor: pointer;
+}
+.kind-chip.active { color: #14101f; background: var(--sunset-2); border-color: var(--sunset-2); font-weight: 700; }
+#toolbar select {
+  background: var(--panel); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 8px; padding: 8px;
+}
+#export-button, .import-button {
+  background: var(--panel); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 12px; font-size: 14px; cursor: pointer;
+}
+.import-button input { display: none; }
+.spoiler-toggle { font-size: 14px; color: var(--muted); }
+
+#tracker-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 430px;
+  gap: 18px; margin-top: 18px; align-items: start;
+}
+@media (max-width: 900px) {
+  #tracker-layout { grid-template-columns: 1fr; }
+}
+
+#trophy-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.trophy-row {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 12px;
+}
+.trophy-row.selected { border-color: var(--sunset-2); }
+.trophy-row.earned { background: #15251f; }
+.trophy-row input[type="checkbox"] { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--sunset-3); }
+.row-body { flex: 1; text-align: left; background: none; border: 0; color: inherit; cursor: pointer; padding: 0; font: inherit; }
+.row-title { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.row-name { font-weight: 700; font-size: 16px; }
+.trophy-row.earned .row-name { color: var(--sunset-3); }
+.row-description { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
+.row-meta { display: block; color: #6d7791; font-size: 12px; margin-top: 3px; text-transform: capitalize; }
+.list-empty { color: var(--muted); padding: 18px; }
+
+.grade-badge {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px;
+  padding: 2px 8px; border-radius: 999px; color: #14101f;
+}
+.grade-platinum { background: var(--platinum); }
+.grade-gold { background: var(--gold); }
+.grade-silver { background: var(--silver); }
+.grade-bronze { background: var(--bronze); }
+
+.missable-flag {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px;
+  color: #14101f; background: var(--danger); padding: 2px 8px; border-radius: 999px;
+}
+
+#trophy-detail {
+  position: sticky; top: 16px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 18px 20px;
+}
+.detail-header { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.detail-name { margin: 0; font-size: 23px; }
+.detail-description { color: var(--sunset-2); font-style: italic; margin: 10px 0 4px; }
+.detail-meta { color: #6d7791; font-size: 12px; text-transform: capitalize; margin: 0 0 10px; }
+.detail-earned { display: flex; gap: 8px; align-items: center; font-weight: 600; margin: 8px 0 4px; }
+.detail-earned input { width: 19px; height: 19px; accent-color: var(--sunset-3); }
+#trophy-detail h3 { margin: 16px 0 6px; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; color: var(--sunset-3); }
+.detail-guide { margin: 0; }
+.detail-steps { margin: 0; padding-left: 20px; }
+.detail-sources { margin: 0; padding-left: 18px; }
+.detail-sources a { color: var(--sunset-2); }
+.detail-source-note { color: #6d7791; font-size: 12px; }
+.detail-spoiler-note { color: var(--danger); }
+
+#roadmap-view { margin-top: 18px; display: grid; gap: 18px; }
+.missable-box {
+  background: #2b1d05; border: 2px solid var(--danger); border-radius: 12px; padding: 16px 20px;
+}
+.missable-box h2 { margin: 0 0 8px; color: var(--danger); font-size: 20px; }
+.missable-jump {
+  background: none; border: 0; padding: 0; font: inherit; font-weight: 700;
+  color: var(--sunset-2); cursor: pointer; text-decoration: underline;
+}
+.missable-note { color: var(--muted); }
+#roadmap-stages { display: grid; gap: 18px; }
+.roadmap-stage { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; }
+.roadmap-stage h2 { margin: 0; font-size: 20px; }
+.stage-hours { color: var(--sunset-2); font-weight: 700; margin: 4px 0; }
+.stage-note { color: var(--muted); margin: 6px 0 12px; max-width: 900px; }
+.stage-trophies { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.stage-trophy {
+  display: inline-flex; gap: 6px; align-items: center;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 8px 4px 12px;
+}
+.stage-trophy.earned { border-color: var(--sunset-3); }
+.stage-jump { background: none; border: 0; color: var(--ink); font: inherit; font-size: 14px; cursor: pointer; padding: 0; }
+#roadmap-rules { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; }
+#roadmap-rules h2 { margin: 0 0 8px; font-size: 20px; }
+.roadmap-rules-list { margin: 0; padding-left: 20px; color: var(--muted); display: grid; gap: 6px; }
+
+#site-footer { padding: 18px 28px 26px; color: #6d7791; font-size: 13px; }
